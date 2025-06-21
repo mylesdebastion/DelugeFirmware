@@ -49,7 +49,7 @@ SettingToggle menuEnableGridViewLoopPads(RuntimeFeatureSettingType::EnableGridVi
 SettingToggle menuAlternativeTapTempoBehaviour(RuntimeFeatureSettingType::AlternativeTapTempoBehaviour);
 SettingToggle menuHorizontalMenus(RuntimeFeatureSettingType::HorizontalMenus);
 SettingToggle menuTrimFromStartOfAudioClip(RuntimeFeatureSettingType::TrimFromStartOfAudioClip);
-SettingToggle menuHarmonicColorMapping(RuntimeFeatureSettingType::HarmonicColorMapping);
+Setting menuNoteColorMapping(RuntimeFeatureSettingType::NoteColorMapping);
 
 std::array<MenuItem*, RuntimeFeatureSettingType::MaxElement - kNonTopLevelSettings> subMenuEntries{
     &menuDrumRandomizer,
@@ -76,7 +76,7 @@ std::array<MenuItem*, RuntimeFeatureSettingType::MaxElement - kNonTopLevelSettin
     &menuHorizontalMenuStyle,
     &menuHorizontalMenusSmallFontForLabels,
     &menuTrimFromStartOfAudioClip,
-    &menuHarmonicColorMapping};
+    &menuNoteColorMapping};
 
 Settings::Settings(l10n::String name, l10n::String title) : menu_item::Submenu(name, title, subMenuEntries) {
 }

@@ -65,8 +65,15 @@ enum RuntimeFeatureSettingType : uint32_t {
 	AlternativeTapTempoBehaviour,
 	HorizontalMenus,
 	TrimFromStartOfAudioClip,
-	HarmonicColorMapping,
+	NoteColorMapping,
 	MaxElement // Keep as boundary
+};
+
+/// Note color mapping modes
+enum NoteColorMappingMode : uint32_t {
+	NoteColorMappingOff = 0,
+	NoteColorMappingChromatic = 1,
+	NoteColorMappingHarmonic = 2
 };
 
 /// Definition for selectable options

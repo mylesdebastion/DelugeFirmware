@@ -102,6 +102,46 @@ static void SetupEmulatedDisplaySetting(RuntimeFeatureSetting& setting, deluge::
 	};
 }
 
+static void SetupHorizontalMenuStyleSetting(RuntimeFeatureSetting& setting, deluge::l10n::String displayName,
+                                            std::string_view xmlName, RuntimeFeatureStateHorizontalMenuStyle def) {
+	setting.displayName = displayName;
+	setting.xmlName = xmlName;
+	setting.value = static_cast<uint32_t>(def);
+
+	setting.options = {
+	    {
+	        .displayName = display->haveOLED() ? "Numeric" : "NUM",
+	        .value = RuntimeFeatureStateHorizontalMenuStyle::Numeric,
+	    },
+	    {
+	        .displayName = display->haveOLED() ? "Graphical" : "GRPH",
+	        .value = RuntimeFeatureStateHorizontalMenuStyle::Graphical,
+	    },
+	};
+}
+
+static void SetupNoteColorMappingSetting(RuntimeFeatureSetting& setting, deluge::l10n::String displayName,
+                                         std::string_view xmlName, NoteColorMappingMode def) {
+	setting.displayName = displayName;
+	setting.xmlName = xmlName;
+	setting.value = static_cast<uint32_t>(def);
+
+	setting.options = {
+	    {
+	        .displayName = display->haveOLED() ? "Off" : "OFF",
+	        .value = NoteColorMappingOff,
+	    },
+	    {
+	        .displayName = display->haveOLED() ? "Chromatic" : "CHRO",
+	        .value = NoteColorMappingChromatic,
+	    },
+	    {
+	        .displayName = display->haveOLED() ? "Harmonic" : "HARM",
+	        .value = NoteColorMappingHarmonic,
+	    },
+	};
+}
+
 void RuntimeFeatureSettings::init() {
 	using enum deluge::l10n::String;
 	// Drum randomizer
@@ -196,10 +236,10 @@ void RuntimeFeatureSettings::init() {
 	                  STRING_FOR_COMMUNITY_FEATURE_TRIM_FROM_START_OF_AUDIO_CLIP, "trimFromStartOfAudioClip",
 	                  RuntimeFeatureStateToggle::On);
 
-	// Harmonic Color Mapping
-	SetupOnOffSetting(settings[RuntimeFeatureSettingType::HarmonicColorMapping],
-	                  STRING_FOR_COMMUNITY_FEATURE_HARMONIC_COLOR_MAPPING, "harmonicColorMapping",
-	                  RuntimeFeatureStateToggle::Off);
+	// Note Color Mapping
+	SetupNoteColorMappingSetting(settings[RuntimeFeatureSettingType::NoteColorMapping],
+	                            STRING_FOR_COMMUNITY_FEATURE_NOTE_COLOR_MAPPING, "noteColorMapping",
+	                            NoteColorMappingOff);
 }
 
 void RuntimeFeatureSettings::readSettingsFromFile() {

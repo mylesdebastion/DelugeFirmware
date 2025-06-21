@@ -17,6 +17,7 @@
 
 #include "model/clip/instrument_clip.h"
 #include "definitions_cxx.hpp"
+#include "gui/colour/harmonic_colors.h"
 #include "gui/l10n/l10n.h"
 #include "gui/ui/browser/browser.h"
 #include "gui/ui/load/load_instrument_preset_ui.h"
@@ -42,6 +43,7 @@
 #include "model/scale/preset_scales.h"
 #include "model/scale/scale_change.h"
 #include "model/scale/utils.h"
+#include "model/settings/runtime_feature_settings.h"
 #include "model/song/song.h"
 #include "modulation/arpeggiator.h"
 #include "modulation/midi/midi_param_collection.h"
@@ -55,8 +57,6 @@
 #include <cmath>
 #include <new>
 #include <ranges>
-#include "gui/colour/harmonic_colors.h"
-#include "model/settings/runtime_feature_settings.h"
 
 namespace params = deluge::modulation::params;
 
@@ -1238,12 +1238,15 @@ NoteRow* InstrumentClip::createNewNoteRowForKit(ModelStackWithTimelineCounter* m
 }
 
 RGB InstrumentClip::getMainColourFromY(int32_t yNote, int8_t noteRowColourOffset) {
-	// Check if harmonic color mapping is enabled
-	if (runtimeFeatureSettings.get(RuntimeFeatureSettingType::HarmonicColorMapping) == RuntimeFeatureStateToggle::On) {
-		// Use harmonic color mapping - note colors are consistent regardless of clip/view
-		return deluge::gui::colour::HarmonicColors::getNoteColor(yNote);
+	// Check if note color mapping is enabled
+	auto mappingMode = static_cast<NoteColorMappingMode>(
+		runtimeFeatureSettings.get(RuntimeFeatureSettingType::NoteColorMapping));
+
+	if (mappingMode != NoteColorMappingOff) {
+		// Use note color mapping - note colors are consistent regardless of clip/view
+		return deluge::gui::colour::NoteColorMapping::getNoteColor(yNote);
 	}
-	
+
 	// Use default color generation
 	return RGB::fromHue((yNote + colourOffset + noteRowColourOffset) * -8 / 3);
 }
