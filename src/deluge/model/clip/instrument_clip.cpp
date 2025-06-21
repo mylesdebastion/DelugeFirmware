@@ -55,6 +55,8 @@
 #include <cmath>
 #include <new>
 #include <ranges>
+#include "gui/colour/harmonic_colors.h"
+#include "model/settings/runtime_feature_settings.h"
 
 namespace params = deluge::modulation::params;
 
@@ -1236,6 +1238,13 @@ NoteRow* InstrumentClip::createNewNoteRowForKit(ModelStackWithTimelineCounter* m
 }
 
 RGB InstrumentClip::getMainColourFromY(int32_t yNote, int8_t noteRowColourOffset) {
+	// Check if harmonic color mapping is enabled
+	if (runtimeFeatureSettings.get(RuntimeFeatureSettingType::HarmonicColorMapping) == RuntimeFeatureStateToggle::On) {
+		// Use harmonic color mapping - note colors are consistent regardless of clip/view
+		return deluge::gui::colour::HarmonicColors::getNoteColor(yNote);
+	}
+	
+	// Use default color generation
 	return RGB::fromHue((yNote + colourOffset + noteRowColourOffset) * -8 / 3);
 }
 

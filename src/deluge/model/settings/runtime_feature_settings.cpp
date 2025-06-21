@@ -195,6 +195,11 @@ void RuntimeFeatureSettings::init() {
 	SetupOnOffSetting(settings[RuntimeFeatureSettingType::TrimFromStartOfAudioClip],
 	                  STRING_FOR_COMMUNITY_FEATURE_TRIM_FROM_START_OF_AUDIO_CLIP, "trimFromStartOfAudioClip",
 	                  RuntimeFeatureStateToggle::On);
+
+	// Harmonic Color Mapping
+	SetupOnOffSetting(settings[RuntimeFeatureSettingType::HarmonicColorMapping],
+	                  STRING_FOR_COMMUNITY_FEATURE_HARMONIC_COLOR_MAPPING, "harmonicColorMapping",
+	                  RuntimeFeatureStateToggle::Off);
 }
 
 void RuntimeFeatureSettings::readSettingsFromFile() {
