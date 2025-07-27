@@ -20,55 +20,54 @@
 
 namespace deluge::gui::colour {
 
-// Chromatic color mapping (half steps): C=Red, C#=Orange, D=Orange-Yellow, D#=Yellow, E=Yellow-Green,
-// F=Green, F#=Cyan-Green, G=Cyan, G#=Blue-Cyan, A=Blue, A#=Indigo, B=Violet
+// Chromatic color mapping (smoother hue steps; fewer yellows & blues bunched; no grays)
 const RGB NoteColorMapping::chromaticNoteColors[12] = {
-	RGB(255, 0, 0),     // C  - Red
-	RGB(255, 128, 0),   // C# - Orange
-	RGB(255, 192, 0),   // D  - Orange-Yellow
-	RGB(255, 255, 0),   // D# - Yellow
-	RGB(192, 255, 0),   // E  - Yellow-Green
-	RGB(0, 255, 0),     // F  - Green
-	RGB(0, 255, 128),   // F# - Cyan-Green
-	RGB(0, 255, 255),   // G  - Cyan
-	RGB(0, 128, 255),   // G# - Blue-Cyan
-	RGB(0, 0, 255),     // A  - Blue
-	RGB(75, 0, 130),    // A# - Indigo
-	RGB(128, 0, 255)    // B  - Violet
+    RGB(255, 0, 0),   // C   - Red
+    RGB(255, 64, 0),  // C#/Db - Red-Orange (more red-weighted vs prior Orange)
+    RGB(255, 112, 0), // D   - Orange (pulled a bit redward)
+    RGB(255, 176, 0), // D#/Eb - Amber (between orange & yellow)
+    RGB(128, 255, 0), // E   - Yellow-Green (more green to reduce E→F jump)
+    RGB(0, 255, 0),   // F   - Green
+    RGB(0, 255, 64),  // F#/Gb - Green-Cyan (more green; less blue-heavy)
+    RGB(0, 255, 200), // G   - Cyan (slight blue reduction to smooth to G#)
+    RGB(0, 128, 255), // G#/Ab - Blue-Cyan (smoother bridge to A=Blue)
+    RGB(0, 0, 255),   // A   - Blue
+    RGB(64, 0, 192),  // A#/Bb - Indigo (kept distinct from A and B)
+    RGB(255, 0, 192)  // B   - Red-Violet (more red-weighted; less like Bb)
 };
 
-// Harmonic mapping (circle of fifths)
-// Index order: C, C#, D, D#, E, F, F#, G, G#, A, A#, B
+// Harmonic mapping = circle-of-fifths reorder of the chromatic palette above
+// Order (by fifths): C, G, D, A, E, B, F#, C#, G#, D#, A#, F
 const RGB NoteColorMapping::harmonicNoteColors[12] = {
-	RGB(255,   0,   0),   // C  – Red
-	RGB(  0, 255, 255),   // C# – Cyan
-	RGB(255, 192,   0),   // D  – Orange-Yellow
-	RGB(  0,   0, 255),   // D# – Blue
-	RGB(192, 255,   0),   // E  – Yellow-Green
-	RGB(128,   0, 255),   // F  – Violet
-	RGB(  0, 255, 128),   // F# – Cyan-Green
-	RGB(255, 128,   0),   // G  – Orange
-	RGB(  0, 128, 255),   // G# – Blue-Cyan
-	RGB(255, 255,   0),   // A  – Yellow
-	RGB( 75,   0, 130),   // A# – Indigo
-	RGB(  0, 255,   0)    // B  – Green
+    chromaticNoteColors[0],  // C
+    chromaticNoteColors[7],  // G
+    chromaticNoteColors[2],  // D
+    chromaticNoteColors[9],  // A
+    chromaticNoteColors[4],  // E
+    chromaticNoteColors[11], // B
+    chromaticNoteColors[6],  // F#
+    chromaticNoteColors[1],  // C#
+    chromaticNoteColors[8],  // G#
+    chromaticNoteColors[3],  // D#
+    chromaticNoteColors[10], // A#
+    chromaticNoteColors[5]   // F
 };
 
 RGB NoteColorMapping::getNoteColor(uint8_t note) {
 	uint8_t noteInOctave = note % 12;
 
 	// Get the current mapping mode from runtime settings
-	auto mappingMode = static_cast<NoteColorMappingMode>(
-		runtimeFeatureSettings.get(RuntimeFeatureSettingType::NoteColorMapping));
+	auto mappingMode =
+	    static_cast<NoteColorMappingMode>(runtimeFeatureSettings.get(RuntimeFeatureSettingType::NoteColorMapping));
 
 	switch (mappingMode) {
-		case NoteColorMappingChromatic:
-			return getChromaticNoteColor(noteInOctave);
-		case NoteColorMappingHarmonic:
-			return getHarmonicNoteColor(noteInOctave);
-		default:
-			// Return default color (this shouldn't happen when feature is enabled)
-			return RGB::fromHue(note * -8 / 3);
+	case NoteColorMappingChromatic:
+		return getChromaticNoteColor(noteInOctave);
+	case NoteColorMappingHarmonic:
+		return getHarmonicNoteColor(noteInOctave);
+	default:
+		// Return default color (this shouldn't happen when feature is enabled)
+		return RGB::fromHue(note * -8 / 3);
 	}
 }
 
