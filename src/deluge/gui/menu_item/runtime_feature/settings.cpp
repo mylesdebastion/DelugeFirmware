@@ -73,8 +73,6 @@ std::array<MenuItem*, RuntimeFeatureSettingType::MaxElement - kNonTopLevelSettin
     &menuEnableGridViewLoopPads,
     &menuAlternativeTapTempoBehaviour,
     &menuHorizontalMenus,
-    &menuHorizontalMenuStyle,
-    &menuHorizontalMenusSmallFontForLabels,
     &menuTrimFromStartOfAudioClip,
     &menuNoteColorMapping};
 

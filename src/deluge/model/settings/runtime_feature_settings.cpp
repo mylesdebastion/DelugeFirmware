@@ -102,24 +102,6 @@ static void SetupEmulatedDisplaySetting(RuntimeFeatureSetting& setting, deluge::
 	};
 }
 
-static void SetupHorizontalMenuStyleSetting(RuntimeFeatureSetting& setting, deluge::l10n::String displayName,
-                                            std::string_view xmlName, RuntimeFeatureStateHorizontalMenuStyle def) {
-	setting.displayName = displayName;
-	setting.xmlName = xmlName;
-	setting.value = static_cast<uint32_t>(def);
-
-	setting.options = {
-	    {
-	        .displayName = display->haveOLED() ? "Numeric" : "NUM",
-	        .value = RuntimeFeatureStateHorizontalMenuStyle::Numeric,
-	    },
-	    {
-	        .displayName = display->haveOLED() ? "Graphical" : "GRPH",
-	        .value = RuntimeFeatureStateHorizontalMenuStyle::Graphical,
-	    },
-	};
-}
-
 static void SetupNoteColorMappingSetting(RuntimeFeatureSetting& setting, deluge::l10n::String displayName,
                                          std::string_view xmlName, NoteColorMappingMode def) {
 	setting.displayName = displayName;
@@ -238,8 +220,8 @@ void RuntimeFeatureSettings::init() {
 
 	// Note Color Mapping
 	SetupNoteColorMappingSetting(settings[RuntimeFeatureSettingType::NoteColorMapping],
-	                            STRING_FOR_COMMUNITY_FEATURE_NOTE_COLOR_MAPPING, "noteColorMapping",
-	                            NoteColorMappingOff);
+	                             STRING_FOR_COMMUNITY_FEATURE_NOTE_COLOR_MAPPING, "noteColorMapping",
+	                             NoteColorMappingOff);
 }
 
 void RuntimeFeatureSettings::readSettingsFromFile() {
